@@ -74,6 +74,17 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // Validaciones de coherencia entre opciones
+    if (opciones.tamano_humano && !opciones.formato_largo) {
+        fprintf(stderr, "Error: la opción -H requiere usar también -l.\n");
+        return 1;
+    }
+
+    if (opciones.profundidad_maxima < -1) {
+        fprintf(stderr, "Error: la profundidad (-d) debe ser -1 o un número mayor o igual a 0.\n");
+        return 1;
+    }
+
     // Directorio inicial (por defecto ".")
     const char *ruta_inicial = ".";
     if (optind < argc) ruta_inicial = argv[optind];
@@ -87,6 +98,12 @@ int main(int argc, char *argv[]) {
 // Mostrar mensaje de ayuda
 void mostrar_uso(const char *programa) {
     fprintf(stderr, "Uso: %s [-a] [-l] [-H] [-L] [-d profundidad] [directorio]\n", programa);
+    fprintf(stderr, "Opciones disponibles:\n");
+    fprintf(stderr, "  -a  Muestra archivos ocultos\n");
+    fprintf(stderr, "  -l  Muestra formato largo (permisos, usuario, tamaño, fecha)\n");
+    fprintf(stderr, "  -H  Tamaños legibles (requiere -l)\n");
+    fprintf(stderr, "  -L  Sigue enlaces simbólicos\n");
+    fprintf(stderr, "  -d  Limita la profundidad de recursión (-1 = sin límite)\n");
 }
 
 // Verificar si un directorio ya fue visitado
